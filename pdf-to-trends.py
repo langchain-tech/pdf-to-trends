@@ -42,11 +42,14 @@ st.title("PDF Chatbot")
 pdf_files = st.file_uploader("Upload PDF files:", accept_multiple_files=True)
 
 openai_key = st.text_input("Enter your OpenAI API key:")
-os.environ["OPENAI_API_KEY"] = openai_key
+if openai_key:
+  os.environ["OPENAI_API_KEY"] = openai_key
+  chat = ChatOpenAI(model_name='gpt-3.5-turbo-0125', temperature=0)
+  embeddings = OpenAIEmbeddings()
 
 query = st.text_input("Enter your query for pdf data:")
-chat = ChatOpenAI(model_name='gpt-3.5-turbo-0125', temperature=0)
-embeddings = OpenAIEmbeddings()
+
+
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=1000)
 
 if st.button("Get Answer to Query"):
