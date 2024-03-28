@@ -1,6 +1,6 @@
 Total number of matches in the tournament?
 Number of matches RCB play against CSK?\
-Can you provide matches of RCB with date, time and location in tabular form?
+Can you provide matches of RCB with date, time and location in tabular form in complete IPL? There are total 14 matches of RCB in IPL 2023.
 On which dates qualifiers, eliminator and final will played with locations details?
 Number of teams playing in the ipl 2023?
 Total number of location are going to organise matches?
