@@ -38,20 +38,21 @@ def convert_to_json(document_content):
     return answer.content
 
 def prepare_files(files):
-    db = ""
     document_content = ""
     for file in files:
         if file.type == 'application/pdf':
-            db = handle_pdf_file(file, document_content)
+            page_contents = handle_pdf_file(file)
         elif file.type == 'text/csv':
-            db = handle_csv_file(file)
+            page_contents = handle_csv_file(file)
         else:
             st.write('File type is not supported!')
-    return db
+        document_content += "".join(page_contents)
+    return document_content
 
 
 
-def handle_pdf_file(pdf_file, document_content):
+def handle_pdf_file(pdf_file):
+    document_content = ''
     with pdf_file as file:
         pdf_reader = PdfReader(file)
         page_contents = []
@@ -67,9 +68,9 @@ def handle_csv_file(csv_file):
             f.write(uploaded_file)
             f.flush()
             loader = CSVLoader(file_path=f.name)
-            document_content = " ".join([doc.page_content for doc in loader.load()])
+            document_content = "".join([doc.page_content for doc in loader.load()])
     return document_content
-
+st.set_page_config(page_title='AI PDF Chatbot', page_icon=None, layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("PDF Chatbot")
 
 files = st.file_uploader("Upload PDF files:", accept_multiple_files=True, type=["csv", "pdf"])
