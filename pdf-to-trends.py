@@ -1,6 +1,5 @@
 import os
 import pathlib
-import pandas as pd
 import streamlit as st
 from pypdf import PdfReader
 from tempfile import NamedTemporaryFile
@@ -19,13 +18,16 @@ from langchain_text_splitters import CharacterTextSplitter
 ### Use this code in between any file or function to stop debugger at any point pdb.set_trace()
 import pdb
 
-
-def visitor_body(text, cm, tm, fontDict, fontSize):
-    y = tm[5]
-    if text and 35 < y < 770:
-        page_contents.append(text)
-
 def convert_to_json(document_content):
+    """
+    Convert document content to JSON format.
+    
+    Args:
+        document_content (str): Content of the document.
+    
+    Returns:
+        str: JSON formatted document content.
+    """
     messages = [
         SystemMessage(
             content=system_message
@@ -38,6 +40,15 @@ def convert_to_json(document_content):
     return answer.content
 
 def prepare_files(files):
+    """
+    Prepare files for processing by extracting their content.
+    
+    Args:
+        files (list): List of uploaded files.
+    
+    Returns:
+        str: Concatenated content of all files.
+    """
     document_content = ""
     for file in files:
         if file.type == 'application/pdf':
@@ -49,9 +60,16 @@ def prepare_files(files):
         document_content += "".join(page_contents)
     return document_content
 
-
-
 def handle_pdf_file(pdf_file):
+    """
+    Handle PDF files by extracting text content from each page.
+    
+    Args:
+        pdf_file (UploadedFile): Uploaded PDF file.
+    
+    Returns:
+        list: List of text content extracted from each page.
+    """
     document_content = ''
     with pdf_file as file:
         pdf_reader = PdfReader(file)
@@ -62,6 +80,15 @@ def handle_pdf_file(pdf_file):
     return document_content
 
 def handle_csv_file(csv_file):
+    """
+    Handle CSV files by extracting content.
+    
+    Args:
+        csv_file (UploadedFile): Uploaded CSV file.
+    
+    Returns:
+        str: Concatenated content of all pages in the CSV file.
+    """
     with csv_file as file:
         uploaded_file = file.read()
         with NamedTemporaryFile(dir='.', suffix='.csv') as f:
@@ -70,6 +97,7 @@ def handle_csv_file(csv_file):
             loader = CSVLoader(file_path=f.name)
             document_content = "".join([doc.page_content for doc in loader.load()])
     return document_content
+
 st.set_page_config(page_title='AI PDF Chatbot', page_icon=None, layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("PDF Chatbot")
 
